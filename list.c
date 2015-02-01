@@ -1,8 +1,11 @@
 
+#include <assert.h>
+
 #include "list.h"
 
 list *list_init() {
     list *l = malloc(sizeof(list));
+    assert(l);
     l->head = NULL;
     l->tail = NULL;
     return l;
@@ -24,6 +27,7 @@ void list_free(list *l,void (*freeItem)(void *d)) {
 
 void list_append(list *l, void *i) {
     listNode *n = (listNode *) malloc(sizeof(listNode));
+    assert(n);
     listNode *t = l->tail;
     n->item = i;
     if (t == NULL) {
@@ -41,6 +45,7 @@ void list_append(list *l, void *i) {
 
 void list_prepend(list *l, void *i) {
     listNode *n = (listNode *) malloc(sizeof(listNode));
+    assert(n);
     listNode *h = l->head;
     n->item = i;
     if (h == NULL) {
@@ -87,6 +92,7 @@ void list_insert(list *l, listNode *after, void *item) {
     while (n != NULL) {
         if (n == after) {
             listNode *new = (listNode *) malloc(sizeof(listNode));
+            assert(new);
             new->item = item;
             new->prev = n;
             if (n->next) {
