@@ -203,4 +203,26 @@ list *list_slice(list *l, int start, int end, void *(*dup) (void *i)) {
 }
 
 
+list *list_concat(list *l1, list *l2, void *(*dup) (void *i)) {
+    list *r = list_init();
+    listNode *i = l1->head;
+    while (i != NULL) {
+        if (dup) {
+            list_append(r,dup(i->item));
+        } else {
+            list_append(r,i->item);
+        }
+        i = i->next;
+    }
+    i = l2->head;
+    while (i != NULL) {
+        if (dup) {
+            list_append(r,dup(i->item));
+        } else {
+            list_append(r,i->item);
+        }
+        i = i->next;
+    }
+    return r;
+}
 

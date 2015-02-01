@@ -57,10 +57,8 @@ int main(int argc, char **argv) {
     list_remove(l,l->tail,free);
     list_apply(l,p);
     printf(">> Removing 5th element\n");
-    if ((r = list_nth(l,5)) != NULL) {
-        list_remove(l,r,free);
-        list_apply(l,p);
-    }
+    list_remove(l,list_nth(l,5),free);
+    list_apply(l,p);
     // Slice
     printf("Slice: 5:10\n");
     list *slice = list_slice(l,5,10,df);
@@ -68,12 +66,15 @@ int main(int argc, char **argv) {
     printf("Slice: -5:-2\n");
     list *slice2 = list_slice(l,-5,-2,df);
     list_apply(slice2,p);
-
+    printf("Concat:\n");
+    list *concat = list_concat(slice,slice2,df);
+    list_apply(concat,p);
 
     // Free
     list_free(l,free);
     list_free(m,free);
     list_free(slice,free);
     list_free(slice2,free);
+    list_free(concat,free);
     return 0;
 }
