@@ -1,7 +1,7 @@
 
-CC = gcc
+CC = cc
 CFLAGS = 
-LD = gcc
+LD = cc
 LDFLAGS = 
 
 OBJS = list.o test_list.o

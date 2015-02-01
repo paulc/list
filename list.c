@@ -69,6 +69,9 @@ int list_count(list *l) {
 listNode *list_nth(list *l, int n) {
     listNode *i = l->head;
     int c = 0;
+    if (n < 0) {
+        n = list_count(l) + n;
+    }
     while (i != NULL) {
         if (c == n) {
             return i;
@@ -93,6 +96,35 @@ void list_insert(list *l, listNode *after, void *item) {
                 new->next = NULL;
             }
             n->next = new;
+            if (after == l->tail) {
+                l->tail = new;
+            }
+            break;
+        }
+        n = n->next;
+    }
+}
+
+void list_remove(list *l, listNode *remove, void (*freeItem)(void *d)) {
+    listNode *n = l->head;
+    while (n != NULL) {
+        if (n == remove) {
+            if (n->prev) {
+                n->prev->next = n->next;
+            }
+            if (n->next) {
+                n->next->prev = n->prev;
+            }
+            if (n == l->head) {
+                l->head = n->next;
+            }
+            if (n == l->tail) {
+                l->tail = n->prev;
+            }
+            if (freeItem != NULL) {
+                freeItem(n->item);
+            }
+            free(n);
             break;
         }
         n = n->next;
@@ -139,4 +171,30 @@ list *list_map(list *l, void *(*f)(void *d)) {
     }
     return r;
 }
+
+list *list_slice(list *l, int start, int end, void *(*dup) (void *i)) {
+    list *r = list_init();
+    listNode *i = l->head;
+    int c = 0;
+    if (start < 0) {
+        start = list_count(l) + start;
+    }
+    if (end < 0) {
+        end = list_count(l) + end;
+    }
+    while (i != NULL) {
+        if (c >= start && c <= end) {
+            if (dup) {
+                list_append(r,dup(i->item));
+            } else {
+                list_append(r,i->item);
+            }
+        }
+        ++c;
+        i = i->next;
+    }
+    return r;
+}
+
+
 

@@ -4,6 +4,12 @@
 
 #include "list.h"
 
+// Helper Functions
+void p(void *d) { printf("--> %s\n",(char *)d); }
+void *q(void *d) { char *s; asprintf(&s,"<%s>",(char *)d); return s; }
+int cf(void *a,void *b) { return strcmp((const char *)a,(const char *)b); }
+void *df(void *i) { return (void *)strdup((const char *)i); } ;
+
 int main(int argc, char **argv) {
     list *l = list_init();
     char *s;
@@ -12,10 +18,6 @@ int main(int argc, char **argv) {
         asprintf(&s,"%d",i);
         list_append(l,s);
     }
-    // Helper Functions
-    void p(void *d) { printf("--> %s\n",(char *)d); }
-    void *q(void *d) { char *s; asprintf(&s,"<%s>",(char *)d); return s; }
-    int cf(void *a,void *b) { return strcmp((const char *)a,(const char *)b); }
     // Print list
     list_apply(l,p);
     // Prepend 'Hello'
@@ -35,13 +37,43 @@ int main(int argc, char **argv) {
         list_insert(l,after,s);
         list_apply(l,p);
     }
+    if ((after = list_nth(l,-1)) != NULL) {
+        printf("Index (-1): %s\n", (char *)(after->item));
+    }
+    if ((after = list_nth(l,-2)) != NULL) {
+        printf("Index (-2): %s\n", (char *)(after->item));
+    }
     // Index
     listNode *x;
-    if ((x = list_find(l,"There",strcmp)) != NULL) {
+    if ((x = list_find(l,"There",cf)) != NULL) {
         printf(">> Found: %s\n",(char *)(x->item));
     }
+    // Remove
+    listNode *r;
+    printf(">> Removing head\n");
+    list_remove(l,l->head,free);
+    list_apply(l,p);
+    printf(">> Removing tail\n");
+    list_remove(l,l->tail,free);
+    list_apply(l,p);
+    printf(">> Removing 5th element\n");
+    if ((r = list_nth(l,5)) != NULL) {
+        list_remove(l,r,free);
+        list_apply(l,p);
+    }
+    // Slice
+    printf("Slice: 5:10\n");
+    list *slice = list_slice(l,5,10,df);
+    list_apply(slice,p);
+    printf("Slice: -5:-2\n");
+    list *slice2 = list_slice(l,-5,-2,df);
+    list_apply(slice2,p);
+
+
     // Free
     list_free(l,free);
     list_free(m,free);
+    list_free(slice,free);
+    list_free(slice2,free);
     return 0;
 }

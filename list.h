@@ -19,8 +19,10 @@ void list_prepend(list *l, void *i);
 int list_count(list *l);
 listNode *list_nth(list *l, int n);
 void list_insert(list *l, listNode *after, void *item);
+void list_remove(list *l, listNode *remove, void (*freeItem)(void *d));
 listNode *list_find(list *l, void *target, int (*cmp)(void *a,void *b));
 void list_apply(list *l, void (*f)(void *d));
 list *list_filter(list *l, int (*f)(void *d));
 list *list_map(list *l, void *(*f)(void *d));
+list *list_slice(list *l, int start, int end, void *(*dup) (void *i));
 
