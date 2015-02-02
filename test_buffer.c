@@ -32,6 +32,12 @@ int main(int argc, char **argv) {
     buf_append_str(b,"h");
     buf_print(b);
     buf_free(b);
+    printf("-----\n");
+    b = buf_init(10);
+    buf_append_printf(b,"%08d %s\n",100,"hello");
+    buf_append_printf(b,"%08d %s\n",100,"hello");
+    buf_print(b);
+    buf_free(b);
 }
 
 

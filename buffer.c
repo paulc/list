@@ -33,6 +33,18 @@ void buf_append_str(buf *b, char *s) {
     buf_append(b,s,strlen(s));
 }
 
+void buf_append_printf(buf *b, const char *format, ...) {
+    va_list ap;
+    char *s = NULL;
+    size_t n;
+    va_start(ap,format);
+    n = vasprintf(&s,format,ap);
+    assert(s);
+    buf_append(b,s,n);
+    free(s);
+    va_end(ap);
+}
+
 void buf_print(buf *b) {
     size_t n;
     printf("b->size: %zu / b->used: %zu\n",b->size,b->used);
