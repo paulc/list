@@ -20,6 +20,8 @@ int main(int argc, char **argv) {
     buf_append(b,"hello",5);
     buf_print(b);
     buf_append(b,"hello",5);
+    buf_append(b,"hello",0);
+    buf_append(b,"hello",1);
     buf_print(b);
     buf_free(b);
     printf("-----\n");
