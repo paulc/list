@@ -10,8 +10,15 @@ void *q(void *d) { char *s; asprintf(&s,"<%s>",(char *)d); return s; }
 int cf(void *a,void *b) { return strcmp((const char *)a,(const char *)b); }
 void *df(void *i) { return (void *)strdup((const char *)i); } 
 int sf(const void *i,const void *j) { 
-    return atoi(*(const char **)i) - atoi(*(const char **)j); 
+    return strcmp(*(const char **)i,*(const char **)j); 
+} 
+
+void append_str(list *l,const char *s) {
+    char *q;
+    asprintf(&q,"%s",s);
+    list_append(l,q);
 }
+
 
 int main(int argc, char **argv) {
     list *l = list_init();
@@ -73,14 +80,23 @@ int main(int argc, char **argv) {
     list *concat = list_concat(slice,slice2,df);
     list_apply(concat,p);
     printf("Sort:\n");
-    list_sort(concat,sf);
-    list_apply(concat,p);
-
+    list *sort = list_init();
+    append_str(sort,"hello");
+    append_str(sort,"there");
+    append_str(sort,"how");
+    append_str(sort,"are");
+    append_str(sort,"you");
+    append_str(sort,"pass");
+    append_str(sort,"the");
+    append_str(sort,"aardvark");
+    list_sort(sort,sf);
+    list_apply(sort,p);
     // Free
     list_free(l,free);
     list_free(m,free);
     list_free(slice,free);
     list_free(slice2,free);
     list_free(concat,free);
+    list_free(sort,free);
     return 0;
 }

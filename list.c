@@ -244,14 +244,6 @@ void list_debug(list *l, void(*pf) (void *i)) {
     }
 }
 
-void parray(void **base,int nmemb) {
-    printf("Array:\n");
-    for (int i=0;i<nmemb;i++) {
-        printf("[%d] %p --> %p = %s\n",i,base,*base, (char *)*base);
-        ++base;
-    }
-}
-
 void list_sort(list *l, int(*cmp) (const void *i, const void *j)) {
     /* Copy list into array */
     int i = 0;
