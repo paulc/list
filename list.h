@@ -26,4 +26,6 @@ list *list_filter(list *l, int (*f)(void *d));
 list *list_map(list *l, void *(*f)(void *d));
 list *list_slice(list *l, int start, int end, void *(*dup) (void *i));
 list *list_concat(list *l1, list *l2, void *(*dup) (void *i));
+void list_debug(list *l, void(*pf) (void *i));
+void list_sort(list *l, int(*cmp) (const void *i, const void *j));
 

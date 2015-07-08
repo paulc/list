@@ -1,5 +1,10 @@
 
+#define _GNU_SOURCE
+
 #include <assert.h>
+#include <string.h>
+#include <strings.h>
+#include <stdio.h>
 
 #include "list.h"
 
@@ -224,5 +229,53 @@ list *list_concat(list *l1, list *l2, void *(*dup) (void *i)) {
         i = i->next;
     }
     return r;
+}
+
+void list_debug(list *l, void(*pf) (void *i)) {
+    printf("--- List [%p]: head -> %p / tail -> %p\n",l,l->head,l->tail);
+    listNode *n = l->head;
+    while (n != NULL) {
+        printf("  + Item [%p]: data -> %p / prev -> %p / next -> %p\n",
+                n,n->item,n->prev,n->next);
+        if (pf != NULL) {
+            pf(n->item);
+        }
+        n = n->next;
+    }
+}
+
+void parray(void **base,int nmemb) {
+    printf("Array:\n");
+    for (int i=0;i<nmemb;i++) {
+        printf("[%d] %p --> %p = %s\n",i,base,*base, (char *)*base);
+        ++base;
+    }
+}
+
+void list_sort(list *l, int(*cmp) (const void *i, const void *j)) {
+    /* Copy list into array */
+    int i = 0;
+    int nmemb = list_count(l);
+    void **base = malloc(nmemb * sizeof(void *)); 
+    bzero(base,nmemb * sizeof(void *));
+    void **p = base;
+    assert(base);
+    listNode *n = l->head;
+    while (n != NULL) {
+        *p = n->item;
+        ++p;
+        n = n->next;
+    }
+    /* qsort array */
+    qsort(base,nmemb,sizeof(void*),cmp);
+    i = 0;
+    n = l->head;
+    p = base;
+    while (n != NULL) {
+        n->item = *p;
+        ++p;
+        n = n->next;
+    }
+    free(base);
 }
 

@@ -8,7 +8,10 @@
 void p(void *d) { printf("--> %s\n",(char *)d); }
 void *q(void *d) { char *s; asprintf(&s,"<%s>",(char *)d); return s; }
 int cf(void *a,void *b) { return strcmp((const char *)a,(const char *)b); }
-void *df(void *i) { return (void *)strdup((const char *)i); } ;
+void *df(void *i) { return (void *)strdup((const char *)i); } 
+int sf(const void *i,const void *j) { 
+    return atoi(*(const char **)i) - atoi(*(const char **)j); 
+}
 
 int main(int argc, char **argv) {
     list *l = list_init();
@@ -68,6 +71,9 @@ int main(int argc, char **argv) {
     list_apply(slice2,p);
     printf("Concat:\n");
     list *concat = list_concat(slice,slice2,df);
+    list_apply(concat,p);
+    printf("Sort:\n");
+    list_sort(concat,sf);
     list_apply(concat,p);
 
     // Free
